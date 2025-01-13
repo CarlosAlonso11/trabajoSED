@@ -13,8 +13,8 @@ architecture Behavioral of comparador is
 
  signal plant_act_int, plant_des_int : integer;
 begin
-    plant_act_int <= to_integer(unsigned(plant_act));
-    plant_des_int <= to_integer(unsigned(plant_des));
+    plant_act_int <= to_integer(unsigned(planta_act));
+    plant_des_int <= to_integer(unsigned(planta_des));
 
     process (plant_act_int, plant_des_int)
     begin
