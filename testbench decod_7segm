@@ -1,1 +1,58 @@
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+entity decod_7segm_tb is
+end decod_7segm_tb;
+
+architecture behavior of decod_7segm_tb is
+
+    -- Component declaration for the unit under test (UUT)
+    COMPONENT decod_7segm
+    PORT (
+        code_2bits : IN STD_LOGIC_VECTOR (1 DOWNTO 0);
+        display : OUT STD_LOGIC_VECTOR (6 DOWNTO 0)
+    );
+    END COMPONENT;
+
+    -- Signals to connect to the UUT
+    SIGNAL code_2bits : STD_LOGIC_VECTOR (1 DOWNTO 0) := "00";
+    SIGNAL display : STD_LOGIC_VECTOR (6 DOWNTO 0);
+
+begin
+
+    -- Instantiate the Unit Under Test (UUT)
+    uut: decod_7segm
+    PORT MAP (
+        code_2bits => code_2bits,
+        display => display
+    );
+
+    -- Stimulus process
+    stim_proc: PROCESS
+    BEGIN
+        -- Test case 1: code_2bits = "00"
+        code_2bits <= "00";  -- display should show "0000001"
+        WAIT FOR 10 ns;
+
+        -- Test case 2: code_2bits = "01"
+        code_2bits <= "01";  -- display should show "1001111"
+        WAIT FOR 10 ns;
+
+        -- Test case 3: code_2bits = "10"
+        code_2bits <= "10";  -- display should show "0010010"
+        WAIT FOR 10 ns;
+
+        -- Test case 4: code_2bits = "11"
+        code_2bits <= "11";  -- display should show "0000110"
+        WAIT FOR 10 ns;
+
+        -- Test case 5: code_2bits = "XX" (other case)
+        code_2bits <= "XX";  -- display should show "1111110"
+        WAIT FOR 10 ns;
+
+        -- End simulation
+        WAIT;
+    END PROCESS;
+
+end behavior;
 
