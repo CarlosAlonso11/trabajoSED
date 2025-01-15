@@ -1,1 +1,61 @@
+LIBRARY ieee;
+USE ieee.std_logic_1164.ALL;
+USE ieee.numeric_std.ALL;
+
+ENTITY codif_2bits_tb IS
+END ENTITY codif_2bits_tb;
+
+ARCHITECTURE behavior OF codif_2bits_tb IS
+
+    -- Component declaration for the unit under test (UUT)
+    COMPONENT codif_2bits
+    PORT (
+        code_4 : IN std_logic_vector(3 DOWNTO 0);
+        code_2bits : OUT std_logic_vector(1 DOWNTO 0)
+    );
+    END COMPONENT;
+
+    -- Signals to connect to the UUT
+    SIGNAL code_4 : std_logic_vector(3 DOWNTO 0) := "0000";
+    SIGNAL code_2bits : std_logic_vector(1 DOWNTO 0);
+
+BEGIN
+
+    -- Instantiate the Unit Under Test (UUT)
+    uut: codif_2bits
+    PORT MAP (
+        code_4 => code_4,
+        code_2bits => code_2bits
+    );
+
+    -- Stimulus process
+    stim_proc: PROCESS
+    BEGIN
+        -- Test cases
+        -- Apply input "0001" to code_4
+        code_4 <= "0001";  -- Should output "00"
+        WAIT FOR 10 ns;
+
+        -- Apply input "0010" to code_4
+        code_4 <= "0010";  -- Should output "01"
+        WAIT FOR 10 ns;
+
+        -- Apply input "0100" to code_4
+        code_4 <= "0100";  -- Should output "10"
+        WAIT FOR 10 ns;
+
+        -- Apply input "1000" to code_4
+        code_4 <= "1000";  -- Should output "11"
+        WAIT FOR 10 ns;
+
+        -- Apply input "0000" to code_4 (undefined case)
+        code_4 <= "0000";  -- Should output undefined
+        WAIT FOR 10 ns;
+
+        -- End simulation
+        WAIT;
+    END PROCESS;
+
+END ARCHITECTURE behavior;
+
 
