@@ -18,7 +18,7 @@ BEGIN
         IF rising_edge(clk) THEN
             SYNC_OUT <= sreg1;              -- Output synchronized value
             sreg1 <= sreg0;
-            sreg <= ASYNC_IN;      -- Shift register update
+            sreg0 <= ASYNC_IN;      -- Shift register update
         END IF;
     END PROCESS;
 END BEHAVIORAL;
