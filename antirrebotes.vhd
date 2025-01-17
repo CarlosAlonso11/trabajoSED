@@ -31,7 +31,7 @@ begin
                     -- Incrementar contador si hay cambio
                     debounce_cnt(i) <= debounce_cnt(i) + 1; 
                     -- Si el contador alcanza el máximo, actualizar el estado estable
-                    if debounce_cnt(i) = "11111111" then
+                    if debounce_cnt(i) = "111111" then
                         planta_stable(i) <= planta_sync(i);
                     end if;
                 end if;
