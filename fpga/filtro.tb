@@ -1,0 +1,82 @@
+LIBRARY ieee;
+USE ieee.std_logic_1164.ALL;
+
+ENTITY filtro_tb IS
+END ENTITY filtro_tb;
+
+ARCHITECTURE behavior OF filtro_tb IS
+
+    -- Declaración del componente filtro
+    COMPONENT filtro
+    PORT (
+        entrada : IN std_logic_vector(3 DOWNTO 0);
+        puerta  : IN std_logic;
+        salida  : OUT std_logic_vector(3 DOWNTO 0)
+    );
+    END COMPONENT;
+
+    -- Señales para conectar al UUT (Unidad bajo prueba)
+    SIGNAL entrada : std_logic_vector(3 DOWNTO 0) := "0000";
+    SIGNAL puerta  : std_logic := '0';
+    SIGNAL salida  : std_logic_vector(3 DOWNTO 0);
+
+    -- Tiempo de periodo del reloj (si se desea agregar un reloj)
+    constant clk_period : time := 10 ns;
+
+BEGIN
+
+    -- Instanciamos la UUT (Unidad bajo prueba)
+    uut: filtro
+    PORT MAP (
+        entrada => entrada,
+        puerta  => puerta,
+        salida  => salida
+    );
+
+    -- Proceso de estímulos
+    stim_proc: PROCESS
+    BEGIN
+        -- Test 1: Comprobamos cuando la puerta está en '0'
+        entrada <= "1010";  -- Valor arbitrario para entrada
+        puerta <= '0';      -- Puerta cerrada
+        WAIT FOR 20 ns;
+        -- Aquí esperamos 20 ns para verificar que la salida es '0000'
+
+        -- Test 2: Comprobamos cuando la puerta está en '1'
+        entrada <= "1010";  -- Valor arbitrario para entrada
+        puerta <= '1';      -- Puerta abierta
+        WAIT FOR 20 ns;
+        -- Esperamos 20 ns para verificar que la salida es igual a la entrada
+
+        -- Test 3: Otro valor de entrada con puerta abierta
+        entrada <= "1101";  -- Otro valor arbitrario para entrada
+        puerta <= '1';      -- Puerta abierta
+        WAIT FOR 20 ns;
+
+        -- Test 4: Puerta cerrada nuevamente
+        entrada <= "1111";  -- Valor arbitrario para entrada
+        puerta <= '0';      -- Puerta cerrada
+        WAIT FOR 20 ns;
+        
+        -- Test 5: Puerta abierta con otra entrada
+        entrada <= "0101";  -- Otro valor arbitrario para entrada
+        puerta <= '1';      -- Puerta abierta
+        WAIT FOR 20 ns;
+
+        -- Test 6: Puerta cerrada con una entrada diferente
+        entrada <= "0110";  -- Otro valor arbitrario para entrada
+        puerta <= '0';      -- Puerta cerrada
+        WAIT FOR 20 ns;
+
+        -- Test 7: Comprobamos comportamiento en 1 en 'puerta' nuevamente
+        entrada <= "0001";  -- Otro valor arbitrario para entrada
+        puerta <= '1';      -- Puerta abierta
+        WAIT FOR 20 ns;
+
+        -- Fin de la simulación
+        ASSERT FALSE REPORT "Fin de la simulación" SEVERITY note;
+        WAIT;
+    END PROCESS;
+
+END ARCHITECTURE behavior;
+

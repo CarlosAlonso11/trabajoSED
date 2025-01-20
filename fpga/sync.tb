@@ -1,0 +1,71 @@
+LIBRARY IEEE;
+USE IEEE.STD_LOGIC_1164.ALL;
+USE IEEE.NUMERIC_STD.ALL;
+
+ENTITY sync_tb IS
+END sync_tb;
+
+ARCHITECTURE behavior OF sync_tb IS
+
+    -- Component Declaration for the Unit Under Test (UUT)
+    COMPONENT sync
+        PORT(
+            clk      : IN  std_logic;
+            ASYNC_IN : IN  std_logic_vector(3 downto 0);
+            SYNC_OUT : OUT std_logic_vector(3 downto 0)
+        );
+    END COMPONENT;
+
+    -- Signals for simulation
+    SIGNAL clk_tb      : std_logic := '0';
+    SIGNAL ASYNC_IN_tb : std_logic_vector(3 downto 0) := (others => '0');
+    SIGNAL SYNC_OUT_tb : std_logic_vector(3 downto 0);
+
+    -- Clock period definition
+    CONSTANT clk_period : time := 10 ns;
+
+BEGIN
+
+    -- Instantiate the Unit Under Test (UUT)
+    uut: sync
+        PORT MAP (
+            clk => clk_tb,
+            ASYNC_IN => ASYNC_IN_tb,
+            SYNC_OUT => SYNC_OUT_tb
+        );
+
+    -- Clock process definition with limited cycles
+    clk_process : PROCESS
+    BEGIN
+        FOR i IN 0 TO 100 LOOP
+            clk_tb <= '0';
+            WAIT FOR clk_period/2;
+            clk_tb <= '1';
+            WAIT FOR clk_period/2;
+        END LOOP;
+        WAIT; -- Stop simulation
+    END PROCESS;
+
+    -- Stimulus process
+    stim_proc: PROCESS
+    BEGIN
+        -- Initialize Inputs
+        ASYNC_IN_tb <= "0000";
+        WAIT FOR 20 ns;
+
+        -- Apply test vectors
+        ASYNC_IN_tb <= "1010";
+        WAIT FOR 20 ns;
+
+        ASYNC_IN_tb <= "1100";
+        WAIT FOR 20 ns;
+
+        ASYNC_IN_tb <= "1111";
+        WAIT FOR 20 ns;
+
+        -- End simulation
+        WAIT;
+    END PROCESS;
+
+END behavior;
+

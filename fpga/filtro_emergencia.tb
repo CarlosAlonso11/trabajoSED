@@ -1,0 +1,92 @@
+LIBRARY ieee;
+USE ieee.std_logic_1164.ALL;
+
+ENTITY filtro_emergencia_tb IS
+END ENTITY filtro_emergencia_tb;
+
+ARCHITECTURE behavior OF filtro_emergencia_tb IS
+
+    -- Componente filtro_emergencia
+    COMPONENT filtro_emergencia
+    PORT (
+        emergencia    : IN  std_logic;
+        puerta_e      : IN  std_logic;
+        motor_up_e    : IN  std_logic;
+        motor_down_e  : IN  std_logic;
+        puerta_s      : OUT std_logic;
+        motor_up_s    : OUT std_logic;
+        motor_down_s  : OUT std_logic
+    );
+    END COMPONENT;
+
+    -- Señales para conectar al UUT (unidad bajo prueba)
+    SIGNAL emergencia    : std_logic := '0';
+    SIGNAL puerta_e      : std_logic := '0';
+    SIGNAL motor_up_e    : std_logic := '0';
+    SIGNAL motor_down_e  : std_logic := '0';
+    SIGNAL puerta_s      : std_logic;
+    SIGNAL motor_up_s    : std_logic;
+    SIGNAL motor_down_s  : std_logic;
+
+BEGIN
+
+    -- Instanciación del UUT (unidad bajo prueba)
+    uut: filtro_emergencia
+    PORT MAP (
+        emergencia    => emergencia,
+        puerta_e      => puerta_e,
+        motor_up_e    => motor_up_e,
+        motor_down_e  => motor_down_e,
+        puerta_s      => puerta_s,
+        motor_up_s    => motor_up_s,
+        motor_down_s  => motor_down_s
+    );
+
+    -- Proceso de estímulos
+    stim_proc: PROCESS
+    BEGIN
+        -- Test 1: Emergencia en '0', las salidas deben ser iguales a las de entrada
+        emergencia <= '0';
+        puerta_e <= '1';
+        motor_up_e <= '1';
+        motor_down_e <= '1';
+        WAIT FOR 20 ns;
+        ASSERT (puerta_s = puerta_e) REPORT "Error en Test 1: puerta_s no es igual a puerta_e" SEVERITY error;
+        ASSERT (motor_up_s = motor_up_e) REPORT "Error en Test 1: motor_up_s no es igual a motor_up_e" SEVERITY error;
+        ASSERT (motor_down_s = motor_down_e) REPORT "Error en Test 1: motor_down_s no es igual a motor_down_e" SEVERITY error;
+
+        -- Test 2: Emergencia en '1', las salidas deben ser '0'
+        emergencia <= '1';
+        WAIT FOR 20 ns;
+        ASSERT (puerta_s = '0') REPORT "Error en Test 2: puerta_s no es 0 cuando emergencia = 1" SEVERITY error;
+        ASSERT (motor_up_s = '0') REPORT "Error en Test 2: motor_up_s no es 0 cuando emergencia = 1" SEVERITY error;
+        ASSERT (motor_down_s = '0') REPORT "Error en Test 2: motor_down_s no es 0 cuando emergencia = 1" SEVERITY error;
+
+        -- Test 3: Emergencia en '0' con diferentes valores en las entradas
+        emergencia <= '0';
+        puerta_e <= '0';
+        motor_up_e <= '0';
+        motor_down_e <= '0';
+        WAIT FOR 20 ns;
+        ASSERT (puerta_s = puerta_e) REPORT "Error en Test 3: puerta_s no es igual a puerta_e" SEVERITY error;
+        ASSERT (motor_up_s = motor_up_e) REPORT "Error en Test 3: motor_up_s no es igual a motor_up_e" SEVERITY error;
+        ASSERT (motor_down_s = motor_down_e) REPORT "Error en Test 3: motor_down_s no es igual a motor_down_e" SEVERITY error;
+
+        -- Test 4: Emergencia en '0' con diferentes valores en las entradas
+        emergencia <= '0';
+        puerta_e <= '1';
+        motor_up_e <= '0';
+        motor_down_e <= '1';
+        WAIT FOR 20 ns;
+        ASSERT (puerta_s = puerta_e) REPORT "Error en Test 4: puerta_s no es igual a puerta_e" SEVERITY error;
+        ASSERT (motor_up_s = motor_up_e) REPORT "Error en Test 4: motor_up_s no es igual a motor_up_e" SEVERITY error;
+        ASSERT (motor_down_s = motor_down_e) REPORT "Error en Test 4: motor_down_s no es igual a motor_down_e" SEVERITY error;
+
+        -- Fin de la simulación
+        ASSERT FALSE REPORT "Fin de la simulación" SEVERITY note;
+        WAIT;
+    END PROCESS;
+
+END ARCHITECTURE behavior;
+
+
